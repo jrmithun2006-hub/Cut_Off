@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cutoff - Dashboard</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4F7DF9 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-details {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .user-email {
+            color: #666;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+        
+        .logout-btn {
+            padding: 10px 20px;
+            background: #f3f4f6;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            color: #555;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logout-btn:hover {
+            background: #e5e7eb;
+            color: #333;
+        }
+        
+        .guest-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* Main Content */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Form Card */
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .form-card h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .field label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .field label.required::after {
+            content: ' *';
+            color: #dc2626;
+        }
+        
+        .field input, .field textarea, .field select {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .field input:focus, .field textarea:focus, .field select:focus {
+            outline: none;
+            border-color: #4F7DF9;
+            box-shadow: 0 0 0 3px rgba(79, 125, 249, 0.1);
+        }
+        
+        .field textarea {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.5;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .submit-btn {
+            grid-column: 1 / -1;
+            padding: 15px;
+            background: linear-gradient(135deg, #4F7DF9 0%, #3a6af5 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #3a6af5 0%, #295df2 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 125, 249, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Test Email Button */
+        .test-email-btn {
+            padding: 12px 20px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .test-email-btn:hover {
+            background: #0da271;
+            transform: translateY(-2px);
+        }
+        
+        /* Subscriptions Section */
+        .subscriptions-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-header h2 {
+            font-size: 22px;
+            color: #333;
+            margin: 0;
+        }
+        
+        .search-filter {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            width: 200px;
+            font-size: 14px;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .subscriptions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .subscriptions-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .subscriptions-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .subscriptions-grid::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        .subscriptions-grid::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        
+        .subscription-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #4F7DF9;
+            transition: all 0.3s;
+        }
+        
+        .subscription-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .subscription-card.expiring {
+            border-left-color: #f59e0b;
+            background: #fef3c7;
+        }
+        
+        .subscription-card.expired {
+            border-left-color: #dc2626;
+            background: #fee2e2;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .sub-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .days-left {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .days-left.expiring {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .days-left.expired {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .sub-details {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .sub-details p {
+            margin: 5px 0;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .card-actions button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .edit-btn {
+            background: #4F7DF9;
+            color: white;
+        }
+        
+        .edit-btn:hover {
+            background: #3a6af5;
+        }
+        
+        .delete-btn {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .delete-btn:hover {
+            background: #fecaca;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        .toast.show {
+            display: block;
+        }
+        
+        .toast.error {
+            background: #dc2626;
+        }
+        
+        .toast.info {
+            background: #3b82f6;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .loading-overlay.show {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f3f4f6;
+            border-top-color: #4F7DF9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .user-details {
+                text-align: center;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .subscriptions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">Cutoff</div>
+            <div class="tagline">Manage your subscriptions</div>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-details">
+                <div class="user-name" id="userName">Loading...</div>
+                <div class="user-email" id="userEmail">Loading...</div>
+            </div>
+            <button id="logoutBtn" class="logout-btn">
+                <span>🚪</span> Logout
+            </button>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="totalSubscriptions">0</div>
+                <div class="stat-label">Total Subscriptions</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">⏰</div>
+                <div class="stat-value" id="expiringSoon">0</div>
+                <div class="stat-label">Expiring Soon</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="activeSubscriptions">0</div>
+                <div class="stat-label">Active</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📧</div>
+                <div class="stat-value" id="emailsSent">0</div>
+                <div class="stat-label">Emails Sent</div>
+            </div>
+        </div>
+        
+        <!-- Main Grid -->
+        <div class="content-grid">
+            <!-- Add Subscription Form -->
+            <div class="form-card">
+                <h2><span>➕</span> Add New Subscription</h2>
+                
+                <!-- Test Email Button -->
+                <button id="testEmailBtn" class="test-email-btn">
+                    📧 Test Email Notification
+                </button>
+                
+                <form id="subscriptionForm" class="form-grid">
+                    <div class="field">
+                        <label class="required">Subscription Name</label>
+                        <input type="text" id="name" placeholder="Netflix Premium" required>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Platform/Service</label>
+                        <input type="text" id="platform" placeholder="Netflix">
+                    </div>
+                    
+                    <div class="field">
+                        <label class="required">Start Date</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    
+                    <div class="field">
+                        <label class="required">End Date</label>
+                        <input type="date" id="endDate" required>
+                    </div>
+                    
+                    <div class="field">
+                        <label class="required">Email for Notifications</label>
+                        <input type="email" id="email" placeholder="you@example.com" required>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Phone Number</label>
+                        <input type="text" id="mobile" placeholder="+91 9876543210">
+                    </div>
+                    
+                    <div class="field">
+                        <label>Monthly Cost ($)</label>
+                        <input type="number" id="cost" placeholder="15.99" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="field full-width">
+                        <label>Notes</label>
+                        <textarea id="notes" placeholder="Any additional information..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span>➕</span> Add Subscription
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Subscriptions List -->
+            <div class="subscriptions-section">
+                <div class="section-header">
+                    <h2><span>📋</span> Your Subscriptions</h2>
+                    <div class="search-filter">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+                        <select id="filterStatus" class="filter-select">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="expiring">Expiring Soon</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="subscriptionsList" class="subscriptions-grid">
+                    <!-- Subscriptions will be loaded here -->
+                </div>
+                
+                <div id="noSubscriptions" class="empty-state" style="display: none;">
+                    <div class="empty-icon">📭</div>
+                    <h3>No subscriptions yet</h3>
+                    <p>Add your first subscription using the form on the left!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+    
+    <!-- ===== LOAD EMAILJS SDK ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // ===== EMAILJS CONFIGURATION =====
+        // Initialize EmailJS with your Public Key
+        (function() {
+            if (typeof emailjs !== 'undefined') {
+                emailjs.init("bcMSvUiDIm1CPzsoa"); // Your EmailJS Public Key
+                console.log("✅ EmailJS initialized successfully");
+            } else {
+                console.error("❌ EmailJS SDK not loaded");
+            }
+        })();
+
+        // ===== EMAIL NOTIFICATION SETTINGS =====
+        const EMAIL_CONFIG = {
+            SERVICE_ID: 'service_5uhyx4s',      // Your EmailJS Service ID
+            TEMPLATE_ID: 'template_ug4laxg',    // Your EmailJS Template ID
+            NOTIFICATION_DAYS: [7, 5, 3, 1, 0] // Send emails 7, 5, 3, 1 days before and on expiry day
+        };
+
+        // ===== FIREBASE CONFIGURATION =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjpxICETdQIvuw3mMt2pBDeOQDT10TH6U",
+            authDomain: "cutoff-subscriptions.firebaseapp.com",
+            databaseURL: "https://cutoff-subscriptions-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "cutoff-subscriptions",
+            storageBucket: "cutoff-subscriptions.firebasestorage.app",
+            messagingSenderId: "239564142815",
+            appId: "1:239564142815:web:44a6577763a691ba0a516a"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        // ===== GLOBAL VARIABLES =====
+        let currentUser = null;
+        let currentUserId = null;
+        let editId = null;
+        let subscriptions = [];
+        let emailsSentCount = 0;
+
+        // ===== DOM ELEMENTS =====
+        const elements = {
+            // User info
+            userName: document.getElementById('userName'),
+            userEmail: document.getElementById('userEmail'),
+            logoutBtn: document.getElementById('logoutBtn'),
+            
+            // Form elements
+            form: document.getElementById('subscriptionForm'),
+            name: document.getElementById('name'),
+            platform: document.getElementById('platform'),
+            startDate: document.getElementById('startDate'),
+            endDate: document.getElementById('endDate'),
+            email: document.getElementById('email'),
+            mobile: document.getElementById('mobile'),
+            cost: document.getElementById('cost'),
+            notes: document.getElementById('notes'),
+            submitBtn: document.getElementById('submitBtn'),
+            testEmailBtn: document.getElementById('testEmailBtn'),
+            
+            // Subscriptions list
+            subscriptionsList: document.getElementById('subscriptionsList'),
+            noSubscriptions: document.getElementById('noSubscriptions'),
+            
+            // Search and filter
+            searchInput: document.getElementById('searchInput'),
+            filterStatus: document.getElementById('filterStatus'),
+            
+            // Stats
+            totalSubscriptions: document.getElementById('totalSubscriptions'),
+            expiringSoon: document.getElementById('expiringSoon'),
+            activeSubscriptions: document.getElementById('activeSubscriptions'),
+            emailsSent: document.getElementById('emailsSent'),
+            
+            // UI elements
+            toast: document.getElementById('toast'),
+            loadingOverlay: document.getElementById('loadingOverlay')
+        };
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        async function initializeApp() {
+            try {
+                showLoading();
+                
+                // Check authentication
+                await checkAuthentication();
+                
+                // Setup event listeners
+                setupEventListeners();
+                
+                // Initialize form
+                initializeForm();
+                
+                // Load user data
+                loadUserData();
+                
+                // Load subscriptions
+                await loadSubscriptions();
+                
+                // Setup real-time listener
+                setupRealtimeListener();
+                
+                // Start email scheduler
+                startEmailScheduler();
+                
+                hideLoading();
+                
+                // Show welcome message
+                setTimeout(() => {
+                    showToast('Welcome to Cutoff Dashboard! 🎉', 'success');
+                }, 500);
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showToast('Failed to load dashboard. Please refresh.', 'error');
+                hideLoading();
+            }
+        }
+
+        // ===== EMAIL NOTIFICATION FUNCTIONS =====
+        
+        // Function to send email notification
+        async function sendEmailNotification(subscription, daysLeft) {
+            try {
+                console.log(`📧 Preparing to send email for: ${subscription.name}, ${daysLeft} days left`);
+                
+                // Skip if no valid email
+                if (!subscription.email || subscription.email === 'guest@cutoff.com') {
+                    console.log('Skipping email - no valid email address');
+                    return false;
+                }
+                
+                // Prepare email template parameters
+                const templateParams = {
+                    to_email: subscription.email,
+                    subscription_name: subscription.name,
+                    platform: subscription.platform || 'Unknown Platform',
+                    days_left: daysLeft,
+                    end_date: formatDate(subscription.endDate),
+                    start_date: formatDate(subscription.startDate),
+                    user_email: subscription.email,
+                    mobile: subscription.mobile || 'Not provided',
+                    notification_date: new Date().toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    }),
+                    notification_time: new Date().toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                };
+                
+                console.log('📤 Sending email with parameters:', templateParams);
+                
+                // Send email using EmailJS
+                const response = await emailjs.send(
+                    EMAIL_CONFIG.SERVICE_ID,
+                    EMAIL_CONFIG.TEMPLATE_ID,
+                    templateParams
+                );
+                
+                console.log('✅ Email sent successfully!', response);
+                
+                // Update email counter
+                emailsSentCount++;
+                elements.emailsSent.textContent = emailsSentCount;
+                
+                // Save email sent record to Firebase
+                if (currentUserId) {
+                    const emailRecord = {
+                        subscriptionId: subscription.id,
+                        subscriptionName: subscription.name,
+                        email: subscription.email,
+                        daysLeft: daysLeft,
+                        sentAt: new Date().toISOString(),
+                        status: 'sent'
+                    };
+                    
+                    await database.ref(`emailLogs/${currentUserId}`).push(emailRecord);
+                }
+                
+                showToast(`📧 Email sent for ${subscription.name} (${daysLeft} days left)`, 'success');
+                return true;
+                
+            } catch (error) {
+                console.error('❌ Failed to send email:', error);
+                
+                // Save failed email record
+                if (currentUserId) {
+                    const emailRecord = {
+                        subscriptionId: subscription.id,
+                        subscriptionName: subscription.name,
+                        email: subscription.email,
+                        daysLeft: daysLeft,
+                        sentAt: new Date().toISOString(),
+                        status: 'failed',
+                        error: error.message
+                    };
+                    
+                    await database.ref(`emailLogs/${currentUserId}`).push(emailRecord);
+                }
+                
+                showToast(`❌ Failed to send email for ${subscription.name}`, 'error');
+                return false;
+            }
+        }
+        
+        // Check and send notifications for all subscriptions
+        function checkAndSendNotifications() {
+            console.log('🔍 Checking all subscriptions for notifications...');
+            
+            let notificationsSent = 0;
+            
+            subscriptions.forEach(subscription => {
+                const daysLeft = getDaysLeft(subscription.endDate);
+                
+                // Check if we should send notification today
+                if (EMAIL_CONFIG.NOTIFICATION_DAYS.includes(daysLeft)) {
+                    console.log(`⏰ Subscription "${subscription.name}" has ${daysLeft} days left. Sending notification.`);
+                    
+                    // Send email notification
+                    sendEmailNotification(subscription, daysLeft);
+                    notificationsSent++;
+                }
+            });
+            
+            if (notificationsSent > 0) {
+                console.log(`📨 Sent ${notificationsSent} email notifications`);
+            }
+        }
+        
+        // Start email scheduler
+        function startEmailScheduler() {
+            console.log('⏰ Starting email notification scheduler...');
+            
+            // Check immediately on load
+            setTimeout(checkAndSendNotifications, 10000);
+            
+            // Check every hour for testing
+            setInterval(checkAndSendNotifications, 60 * 60 * 1000);
+            
+            // Schedule daily check at 9 AM
+            scheduleDailyCheck();
+        }
+        
+        // Schedule daily check at 9 AM
+        function scheduleDailyCheck() {
+            const now = new Date();
+            const nineAM = new Date();
+            nineAM.setHours(9, 0, 0, 0);
+            
+            if (now > nineAM) {
+                nineAM.setDate(nineAM.getDate() + 1);
+            }
+            
+            const delay = nineAM.getTime() - now.getTime();
+            
+            setTimeout(() => {
+                checkAndSendNotifications();
+                // Schedule next day
+                setInterval(checkAndSendNotifications, 24 * 60 * 60 * 1000);
+            }, delay);
+            
+            console.log(`⏰ Next daily check scheduled at: ${nineAM.toLocaleTimeString()}`);
+        }
+        
+        // Schedule email notifications for a new subscription
+        function scheduleSubscriptionEmails(subscription) {
+            console.log(`📅 Scheduling emails for new subscription: ${subscription.name}`);
+            
+            const endDate = new Date(subscription.endDate);
+            const now = new Date();
+            const daysUntilExpiry = getDaysLeft(subscription.endDate);
+            
+            // Schedule notifications for each configured day
+            EMAIL_CONFIG.NOTIFICATION_DAYS.forEach(day => {
+                if (daysUntilExpiry >= day) {
+                    // Calculate when to send this notification
+                    const notificationDate = new Date(endDate);
+                    notificationDate.setDate(notificationDate.getDate() - day);
+                    
+                    const delay = notificationDate.getTime() - now.getTime();
+                    
+                    if (delay > 0) {
+                        console.log(`⏰ Scheduled: ${subscription.name} - ${day} days before expiry (in ${Math.round(delay/(1000*60*60*24))} days)`);
+                        
+                        setTimeout(() => {
+                            sendEmailNotification(subscription, day);
+                        }, delay);
+                    } else if (delay > -24 * 60 * 60 * 1000) { // If within last 24 hours
+                        // Send immediately if within 24 hours of when it should have been sent
+                        console.log(`⏰ Sending now (missed): ${subscription.name} - ${day} days notification`);
+                        sendEmailNotification(subscription, day);
+                    }
+                }
+            });
+            
+            // Also send immediate notification if expiring soon
+            if (daysUntilExpiry <= 7 && daysUntilExpiry > 0) {
+                console.log(`⏰ Immediate notification: ${subscription.name} expiring in ${daysUntilExpiry} days`);
+                setTimeout(() => {
+                    sendEmailNotification(subscription, daysUntilExpiry);
+                }, 3000);
+            }
+        }
+        
+        // Test email function
+        async function testEmailNotification() {
+            showToast('Sending test email...', 'info');
+            
+            const testSubscription = {
+                name: 'Netflix Premium (Test)',
+                platform: 'Netflix',
+                endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                startDate: new Date().toISOString().split('T')[0],
+                email: elements.userEmail.textContent || 'test@example.com',
+                mobile: '+1234567890',
+                id: 'test_' + Date.now()
+            };
+            
+            const success = await sendEmailNotification(testSubscription, 3);
+            
+            if (success) {
+                showToast('✅ Test email sent successfully! Check your inbox.', 'success');
+            } else {
+                showToast('❌ Test email failed. Check console for details.', 'error');
+            }
+        }
+
+        // ===== AUTHENTICATION =====
+        async function checkAuthentication() {
+            // Check localStorage first
+            currentUserId = localStorage.getItem('cutoff_user');
+            const userEmail = localStorage.getItem('cutoff_email');
+            const userName = localStorage.getItem('cutoff_name');
+            
+            if (!currentUserId || !userEmail) {
+                // Redirect to login
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Check Firebase auth for email users
+            const isGuest = localStorage.getItem('cutoff_is_guest') === 'true';
+            
+            if (!isGuest) {
+                try {
+                    // Wait for auth state
+                    await new Promise((resolve) => {
+                        const unsubscribe = auth.onAuthStateChanged((user) => {
+                            unsubscribe();
+                            if (!user) {
+                                // User not authenticated in Firebase
+                                window.location.href = 'index.html';
+                                return;
+                            }
+                            currentUser = user;
+                            resolve();
+                        });
+                    });
+                } catch (error) {
+                    console.error('Auth check error:', error);
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+
+        function loadUserData() {
+            const userName = localStorage.getItem('cutoff_name') || 'User';
+            const userEmail = localStorage.getItem('cutoff_email') || 'No email';
+            const isGuest = localStorage.getItem('cutoff_is_guest') === 'true';
+            
+            elements.userName.textContent = userName;
+            elements.userEmail.textContent = userEmail;
+            
+            // Set email in form
+            if (!isGuest) {
+                elements.email.value = userEmail;
+            }
+        }
+
+        // ===== FORM HANDLING =====
+        function initializeForm() {
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 30); // Default 30 days
+            
+            elements.startDate.value = today;
+            elements.endDate.value = tomorrow.toISOString().split('T')[0];
+            elements.endDate.min = today;
+            
+            // Update end date min when start date changes
+            elements.startDate.addEventListener('change', function() {
+                elements.endDate.min = this.value;
+                if (new Date(elements.endDate.value) < new Date(this.value)) {
+                    elements.endDate.value = this.value;
+                }
+            });
+        }
+
+        elements.form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            const subscription = {
+                name: elements.name.value.trim(),
+                platform: elements.platform.value.trim(),
+                startDate: elements.startDate.value,
+                endDate: elements.endDate.value,
+                email: elements.email.value.trim(),
+                mobile: elements.mobile.value.trim(),
+                cost: parseFloat(elements.cost.value) || 0,
+                notes: elements.notes.value.trim(),
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            try {
+                showLoading();
+                
+                if (editId) {
+                    // Update existing subscription
+                    await database.ref(`subscriptions/${currentUserId}/${editId}`).update(subscription);
+                    showToast('Subscription updated successfully! ✨', 'success');
+                    editId = null;
+                    elements.submitBtn.innerHTML = '<span>➕</span> Add Subscription';
+                } else {
+                    // Add new subscription
+                    const newRef = database.ref(`subscriptions/${currentUserId}`).push();
+                    subscription.id = newRef.key;
+                    await newRef.set(subscription);
+                    
+                    showToast('Subscription added successfully! 🎉', 'success');
+                    
+                    // Schedule email notifications for the new subscription
+                    setTimeout(() => {
+                        scheduleSubscriptionEmails(subscription);
+                    }, 2000);
+                    
+                    // Scroll to the new subscription
+                    setTimeout(() => {
+                        const newCard = document.querySelector(`[data-id="${subscription.id}"]`);
+                        if (newCard) {
+                            newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 500);
+                }
+                
+                // Reset form
+                resetForm();
+                hideLoading();
+                
+            } catch (error) {
+                console.error('Error saving subscription:', error);
+                showToast('Failed to save subscription. Please try again.', 'error');
+                hideLoading();
+            }
+        });
+
+        function validateForm() {
+            let isValid = true;
+            
+            // Reset errors
+            const inputs = [elements.name, elements.startDate, elements.endDate, elements.email];
+            inputs.forEach(input => input.style.borderColor = '#e0e0e0');
+            
+            // Validate name
+            if (!elements.name.value.trim()) {
+                elements.name.style.borderColor = '#dc2626';
+                isValid = false;
+            }
+            
+            // Validate dates
+            if (!elements.startDate.value || !elements.endDate.value) {
+                if (!elements.startDate.value) elements.startDate.style.borderColor = '#dc2626';
+                if (!elements.endDate.value) elements.endDate.style.borderColor = '#dc2626';
+                isValid = false;
+            }
+            
+            // Validate email
+            if (!elements.email.value.trim() || !isValidEmail(elements.email.value)) {
+                elements.email.style.borderColor = '#dc2626';
+                isValid = false;
+            }
+            
+            // Validate end date is after start date
+            if (elements.startDate.value && elements.endDate.value) {
+                const startDate = new Date(elements.startDate.value);
+                const endDate = new Date(elements.endDate.value);
+                
+                if (endDate <= startDate) {
+                    elements.endDate.style.borderColor = '#dc2626';
+                    showToast('End date must be after start date', 'error');
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                showToast('Please fill in all required fields correctly', 'error');
+            }
+            
+            return isValid;
+        }
+
+        function resetForm() {
+            elements.form.reset();
+            initializeForm();
+            editId = null;
+            elements.submitBtn.innerHTML = '<span>➕</span> Add Subscription';
+        }
+
+        // ===== SUBSCRIPTIONS MANAGEMENT =====
+        async function loadSubscriptions() {
+            if (!currentUserId) return;
+            
+            try {
+                const snapshot = await database.ref(`subscriptions/${currentUserId}`).once('value');
+                subscriptions = [];
+                
+                if (!snapshot.exists()) {
+                    elements.noSubscriptions.style.display = 'block';
+                    updateStats();
+                    return;
+                }
+                
+                snapshot.forEach((childSnapshot) => {
+                    const sub = childSnapshot.val();
+                    sub.id = childSnapshot.key;
+                    subscriptions.push(sub);
+                });
+                
+                renderSubscriptions();
+                updateStats();
+                
+                // Load email logs count
+                await loadEmailLogsCount();
+                
+            } catch (error) {
+                console.error('Error loading subscriptions:', error);
+                showToast('Failed to load subscriptions', 'error');
+            }
+        }
+        
+        async function loadEmailLogsCount() {
+            if (!currentUserId) return;
+            
+            try {
+                const snapshot = await database.ref(`emailLogs/${currentUserId}`).once('value');
+                if (snapshot.exists()) {
+                    emailsSentCount = snapshot.numChildren();
+                    elements.emailsSent.textContent = emailsSentCount;
+                }
+            } catch (error) {
+                console.error('Error loading email logs:', error);
+            }
+        }
+
+        function setupRealtimeListener() {
+            if (!currentUserId) return;
+            
+            database.ref(`subscriptions/${currentUserId}`).on('value', (snapshot) => {
+                subscriptions = [];
+                
+                if (!snapshot.exists()) {
+                    elements.noSubscriptions.style.display = 'block';
+                    elements.subscriptionsList.innerHTML = '';
+                    updateStats();
+                    return;
+                }
+                
+                elements.noSubscriptions.style.display = 'none';
+                
+                snapshot.forEach((childSnapshot) => {
+                    const sub = childSnapshot.val();
+                    sub.id = childSnapshot.key;
+                    subscriptions.push(sub);
+                });
+                
+                renderSubscriptions();
+                updateStats();
+            });
+        }
+
+        function renderSubscriptions() {
+            const searchTerm = elements.searchInput.value.toLowerCase();
+            const filterStatus = elements.filterStatus.value;
+            
+            let filteredSubs = subscriptions.filter(sub => {
+                // Apply search filter
+                const matchesSearch = 
+                    sub.name.toLowerCase().includes(searchTerm) ||
+                    (sub.platform && sub.platform.toLowerCase().includes(searchTerm)) ||
+                    (sub.notes && sub.notes.toLowerCase().includes(searchTerm)) ||
+                    sub.email.toLowerCase().includes(searchTerm);
+                
+                if (!matchesSearch) return false;
+                
+                // Apply status filter
+                const daysLeft = getDaysLeft(sub.endDate);
+                
+                switch (filterStatus) {
+                    case 'active':
+                        return daysLeft > 0;
+                    case 'expiring':
+                        return daysLeft > 0 && daysLeft <= 7;
+                    case 'expired':
+                        return daysLeft <= 0;
+                    default:
+                        return true;
+                }
+            });
+            
+            // Sort by end date (closest first)
+            filteredSubs.sort((a, b) => {
+                return new Date(a.endDate) - new Date(b.endDate);
+            });
+            
+            elements.subscriptionsList.innerHTML = '';
+            
+            if (filteredSubs.length === 0) {
+                elements.noSubscriptions.style.display = 'block';
+                return;
+            }
+            
+            filteredSubs.forEach(sub => {
+                const card = createSubscriptionCard(sub);
+                elements.subscriptionsList.appendChild(card);
+            });
+        }
+
+        function createSubscriptionCard(sub) {
+            const daysLeft = getDaysLeft(sub.endDate);
+            const isExpired = daysLeft <= 0;
+            const isExpiringSoon = daysLeft > 0 && daysLeft <= 7;
+            
+            let statusClass = 'days-left';
+            let statusText = `${daysLeft} days left`;
+            let cardClass = '';
+            
+            if (isExpired) {
+                statusClass = 'days-left expired';
+                statusText = 'Expired';
+                cardClass = 'expired';
+            } else if (isExpiringSoon) {
+                statusClass = 'days-left expiring';
+                cardClass = 'expiring';
+            }
+            
+            const card = document.createElement('div');
+            card.className = `subscription-card ${cardClass}`;
+            card.dataset.id = sub.id;
+            card.dataset.endDate = sub.endDate;
+            card.dataset.email = sub.email;
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="sub-name">${escapeHtml(sub.name)}</div>
+                    <span class="${statusClass}">${statusText}</span>
+                </div>
+                
+                <div class="sub-details">
+                    ${sub.platform ? `<p><strong>Platform:</strong> ${escapeHtml(sub.platform)}</p>` : ''}
+                    <p><strong>Period:</strong> ${formatDate(sub.startDate)} - ${formatDate(sub.endDate)}</p>
+                    <p><strong>Email:</strong> ${escapeHtml(sub.email)}</p>
+                    ${sub.mobile ? `<p><strong>Phone:</strong> ${escapeHtml(sub.mobile)}</p>` : ''}
+                    ${sub.cost ? `<p><strong>Cost:</strong> $${parseFloat(sub.cost).toFixed(2)}/month</p>` : ''}
+                    ${sub.notes ? `<p><strong>Notes:</strong> ${escapeHtml(sub.notes)}</p>` : ''}
+                </div>
+                
+                <div class="card-actions">
+                    <button class="edit-btn" onclick="editSubscription('${sub.id}')">
+                        <span>✏️</span> Edit
+                    </button>
+                    <button class="delete-btn" onclick="deleteSubscription('${sub.id}')">
+                        <span>🗑️</span> Delete
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        window.editSubscription = function(id) {
+            const sub = subscriptions.find(s => s.id === id);
+            if (!sub) return;
+            
+            editId = id;
+            
+            // Fill form with subscription data
+            elements.name.value = sub.name;
+            elements.platform.value = sub.platform || '';
+            elements.startDate.value = sub.startDate;
+            elements.endDate.value = sub.endDate;
+            elements.email.value = sub.email;
+            elements.mobile.value = sub.mobile || '';
+            elements.cost.value = sub.cost || '';
+            elements.notes.value = sub.notes || '';
+            
+            // Update UI
+            elements.submitBtn.innerHTML = '<span>✏️</span> Update Subscription';
+            
+            // Scroll to form
+            elements.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            showToast('Editing subscription...', 'info');
+        };
+
+        window.deleteSubscription = function(id) {
+            if (!confirm('Are you sure you want to delete this subscription?')) {
+                return;
+            }
+            
+            if (!currentUserId) return;
+            
+            database.ref(`subscriptions/${currentUserId}/${id}`).remove()
+                .then(() => {
+                    showToast('Subscription deleted successfully', 'success');
+                })
+                .catch(error => {
+                    console.error('Delete error:', error);
+                    showToast('Failed to delete subscription', 'error');
+                });
+        };
+
+        // ===== STATS =====
+        function updateStats() {
+            const total = subscriptions.length;
+            const expiring = subscriptions.filter(sub => {
+                const daysLeft = getDaysLeft(sub.endDate);
+                return daysLeft > 0 && daysLeft <= 7;
+            }).length;
+            
+            const active = subscriptions.filter(sub => {
+                return getDaysLeft(sub.endDate) > 0;
+            }).length;
+            
+            elements.totalSubscriptions.textContent = total;
+            elements.expiringSoon.textContent = expiring;
+            elements.activeSubscriptions.textContent = active;
+        }
+
+        // ===== EVENT LISTENERS =====
+        function setupEventListeners() {
+            // Logout
+            elements.logoutBtn.addEventListener('click', handleLogout);
+            
+            // Search and filter
+            elements.searchInput.addEventListener('input', renderSubscriptions);
+            elements.filterStatus.addEventListener('change', renderSubscriptions);
+            
+            // Test email button
+            elements.testEmailBtn.addEventListener('click', testEmailNotification);
+            
+            // Form reset on cancel edit (ESC key)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && editId) {
+                    resetForm();
+                    showToast('Edit cancelled', 'info');
+                }
+            });
+        }
+
+        function handleLogout() {
+            showLoading();
+            
+            // Sign out from Firebase if not guest
+            const isGuest = localStorage.getItem('cutoff_is_guest') === 'true';
+            
+            if (!isGuest && auth.currentUser) {
+                auth.signOut().catch(console.error);
+            }
+            
+            // Clear localStorage
+            localStorage.removeItem('cutoff_user');
+            localStorage.removeItem('cutoff_email');
+            localStorage.removeItem('cutoff_name');
+            localStorage.removeItem('cutoff_is_guest');
+            
+            // Redirect to login
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 500);
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function getDaysLeft(endDate) {
+            const end = new Date(endDate);
+            const now = new Date();
+            const diff = end - now;
+            return Math.ceil(diff / (1000 * 60 * 60 * 24));
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = elements.toast;
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function showLoading() {
+            elements.loadingOverlay.classList.add('show');
+        }
+
+        function hideLoading() {
+            elements.loadingOverlay.classList.remove('show');
+        }
+        
+        // ===== DEBUG FUNCTIONS =====
+        // Add this to test EmailJS from browser console
+        window.debugEmail = function() {
+            console.log('🔧 EmailJS Debug Info:');
+            console.log('- EmailJS loaded:', typeof emailjs !== 'undefined');
+            console.log('- Service ID:', EMAIL_CONFIG.SERVICE_ID);
+            console.log('- Template ID:', EMAIL_CONFIG.TEMPLATE_ID);
+            console.log('- User Email:', elements.userEmail.textContent);
+            console.log('- Total Subscriptions:', subscriptions.length);
+            console.log('- Emails Sent:', emailsSentCount);
+            
+            // Run a test
+            testEmailNotification();
+        };
+        
+        // Force check notifications
+        window.forceCheckNotifications = function() {
+            console.log('🔍 Forcing notification check...');
+            checkAndSendNotifications();
+        };
+    </script>
+</body>
+</html>

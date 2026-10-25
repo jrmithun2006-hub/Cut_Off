@@ -1,0 +1,97 @@
+/* Additional styles that can be included */
+
+/* Print styles */
+@media print {
+    .header, 
+    .form-card, 
+    .search-filter, 
+    .card-actions,
+    .logout-btn,
+    #toast {
+        display: none !important;
+    }
+    
+    .container {
+        padding: 0 !important;
+    }
+    
+    .subscription-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        margin-bottom: 10px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* Selection color */
+::selection {
+    background: rgba(79, 125, 249, 0.3);
+    color: #333;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+    outline: 2px solid #4F7DF9;
+    outline-offset: 2px;
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #1a1a1a;
+        color: #f0f0f0;
+    }
+    
+    .login-box,
+    .form-card,
+    .subscriptions-section,
+    .stat-card,
+    .subscription-card {
+        background: #2d2d2d;
+        color: #f0f0f0;
+    }
+    
+    input, textarea, select {
+        background: #3d3d3d;
+        border-color: #555;
+        color: #f0f0f0;
+    }
+    
+    input::placeholder,
+    textarea::placeholder {
+        color: #aaa;
+    }
+}

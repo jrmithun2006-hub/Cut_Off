@@ -1,0 +1,290 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Cutoff - Dashboard</title> 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
+  <style> 
+    * { margin: 0; padding: 0; box-sizing: border-box; } 
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: #f5f7fc; 
+      color: #111827; 
+    } 
+    .header { 
+      background: white; 
+      padding: 18px 32px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+    } 
+    .logo { 
+      font-size: 24px; 
+      font-weight: 600; 
+      background: linear-gradient(135deg, #4F7DF9 0%, #764ba2 100%); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    } 
+    .tagline { 
+      font-size: 12px; 
+      color: #64748B; 
+    } 
+    .signout-btn { 
+      padding: 8px 16px; 
+      border: 1px solid #CBD5E1; 
+      border-radius: 8px; 
+      background: white; 
+      color: #374151; 
+      cursor: pointer; 
+      font-weight: 500; 
+    } 
+    .signout-btn:hover { 
+      background: #f3f4f6; 
+    } 
+    .container { 
+      max-width: 800px; 
+      margin: 30px auto; 
+      padding: 0 16px; 
+    } 
+    .card { 
+      background: white; 
+      border-radius: 12px; 
+      padding: 20px; 
+      box-shadow: 0px 10px 30px rgba(2, 6, 23, 0.06); 
+      margin-bottom: 20px; 
+    } 
+    .form-grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 15px; 
+    } 
+    .field { 
+      display: flex; 
+      flex-direction: column; 
+    } 
+    .field label { 
+      font-size: 14px; 
+      color: #1e293b; 
+      margin-bottom: 6px; 
+      font-weight: 500; 
+    } 
+    .field input { 
+      padding: 12px; 
+      border-radius: 8px; 
+      border: 1px solid #d8dee8; 
+      background: #f8fafc; 
+      font-size: 15px; 
+    } 
+    .field input:focus { 
+      outline: none; 
+      border-color: #4F7DF9; 
+    } 
+    .full-row { 
+      grid-column: span 2; 
+    } 
+    .primary-btn { 
+      width: 100%; 
+      padding: 14px; 
+      background: #4F7DF9; 
+      color: white; 
+      border-radius: 12px; 
+      font-size: 15px; 
+      border: none; 
+      cursor: pointer; 
+      font-weight: 600; 
+      margin-top: 10px; 
+    } 
+    .primary-btn:hover { 
+      background: #3a6af5; 
+    } 
+    h2 { 
+      margin: 20px 0 10px 0; 
+      color: #0F172A; 
+    } 
+    .subscriptions { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 20px; 
+      margin-top: 20px; 
+    } 
+    .sub-card { 
+      background: white; 
+      border-radius: 14px; 
+      padding: 18px 20px; 
+      box-shadow: 0px 6px 18px rgba(0,0,0,0.06); 
+      border: 1px solid #e2e8f0; 
+    } 
+    .sub-name { 
+      font-size: 18px; 
+      font-weight: 600; 
+      margin-bottom: 5px; 
+      color: #0F172A; 
+    } 
+    .platform { 
+      font-size: 14px; 
+      color: #64748B; 
+      margin-bottom: 10px; 
+    } 
+    .days { 
+      font-size: 12px; 
+      padding: 4px 10px; 
+      border-radius: 12px; 
+      font-weight: 500; 
+      display: inline-block; 
+      margin-top: 10px; 
+    } 
+    .card-actions { 
+      display: flex; 
+      gap: 10px; 
+      margin-top: 15px; 
+    } 
+    .card-actions button { 
+      flex: 1; 
+      padding: 8px 0; 
+      border-radius: 8px; 
+      border: none; 
+      cursor: pointer; 
+      font-size: 14px; 
+    } 
+    .edit-btn { 
+      background: #4F7DF9; 
+      color: white; 
+    } 
+    .delete-btn { 
+      background: #FDE2E2; 
+      color: #B91C1C; 
+    } 
+    @media (max-width: 640px) { 
+      .form-grid { grid-template-columns: 1fr; } 
+      .full-row { grid-column: span 1; } 
+    } 
+  </style> 
+</head> 
+<body> 
+  <header class="header"> 
+    <div> 
+      <h1 class="logo">Cutoff</h1> 
+      <p class="tagline">Your subscriptions, on your schedule</p> 
+    </div> 
+    <button id="logoutBtn" class="signout-btn">Logout</button> 
+  </header> 
+  <main class="container"> 
+    <section class="card"> 
+      <h2>Add New Subscription</h2> 
+      <form id="subscriptionForm" class="form-grid"> 
+        <div class="field"> 
+          <label>Subscription Name *</label> 
+          <input type="text" id="name" placeholder="Netflix Premium" required> 
+        </div> 
+        <div class="field"> 
+          <label>Platform</label> 
+          <input type="text" id="platform" placeholder="Netflix"> 
+        </div> 
+        <div class="field"> 
+          <label>End Date *</label> 
+          <input type="date" id="endDate" required> 
+        </div> 
+        <div class="field"> 
+          <label>Email *</label> 
+          <input type="email" id="email" placeholder="you@example.com" required> 
+        </div> 
+        <div class="field full-row"> 
+          <button type="submit" class="primary-btn">Add Subscription</button> 
+        </div> 
+      </form> 
+    </section> 
+    <h2>Your Subscriptions</h2> 
+    <div id="subscriptionsList" class="subscriptions"></div> 
+  </main> 
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script> 
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script> 
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script> 
+  <script src="firebase-config.js"></script> 
+  <script> 
+    // Authentication check 
+    firebase.auth().onAuthStateChanged(function(user) { 
+      if (!user) { 
+        window.location.href = "index.html"; 
+      } else { 
+        loadSubscriptions(); 
+      } 
+    }); 
+    // Logout 
+    document.getElementById('logoutBtn').onclick = function() { 
+      firebase.auth().signOut(); 
+    }; 
+    // Load subscriptions 
+    function loadSubscriptions() { 
+      const userId = firebase.auth().currentUser.uid; 
+      firebase.database().ref('subscriptions/' + userId).once('value') 
+        .then(function(snapshot) { 
+          const list = document.getElementById('subscriptionsList'); 
+          list.innerHTML = ''; 
+          snapshot.forEach(function(childSnapshot) { 
+            const sub = childSnapshot.val(); 
+            const daysLeft = Math.ceil((new Date(sub.endDate) - new Date()) / (86400000)); 
+            const card = document.createElement('div'); 
+            card.className = 'sub-card'; 
+            card.innerHTML = ` 
+              <h3 class="sub-name">${sub.name}</h3> 
+              <p>Ends: ${new Date(sub.endDate).toLocaleDateString()}</p> 
+              <p>Email: ${sub.email}</p> 
+              <span class="days" style="background: ^${daysLeft ^<^= 7 ? '#FEF3C7' : '#D1FAE5'}; color: ^${daysLeft ^<^= 7 ? '#92400E' : '#065F46'}"> 
+                ${daysLeft <= 0 ? 'Expired' : daysLeft + ' days left'} 
+              </span> 
+              <div class="card-actions"> 
+                <button class="edit-btn">Edit</button> 
+                <button class="delete-btn" onclick="deleteSubscription('^${childSnapshot.key}^')">Delete</button> 
+              </div> 
+            `; 
+            list.appendChild(card); 
+          }); 
+        }); 
+    } 
+    // Delete subscription 
+    window.deleteSubscription = function(subId) { 
+      if (confirm('Are you sure you want to delete this subscription?')) { 
+        const userId = firebase.auth().currentUser.uid; 
+        firebase.database().ref('subscriptions/' + userId + '/' + subId).remove() 
+          .then(function() { 
+            loadSubscriptions(); 
+            alert('Subscription deleted!'); 
+          }); 
+      } 
+    }; 
+    // Add subscription 
+    document.getElementById('subscriptionForm').onsubmit = function(e) { 
+      e.preventDefault(); 
+      const name = document.getElementById('name').value; 
+      const platform = document.getElementById('platform').value; 
+      const endDate = document.getElementById('endDate').value; 
+      const email = document.getElementById('email').value; 
+        const userId = firebase.auth().currentUser.uid; 
+        firebase.database().ref('subscriptions/' + userId).push({ 
+          name: name, 
+          platform: platform, 
+          endDate: endDate, 
+          email: email, 
+          createdAt: new Date().toISOString() 
+        }) 
+        .then(function() { 
+          document.getElementById('subscriptionForm').reset(); 
+          loadSubscriptions(); 
+          alert('Subscription added successfully!'); 
+        }) 
+        .catch(function(error) { 
+          alert('Error: ' + error.message); 
+        }); 
+      } else { 
+        alert('Please fill all required fields!'); 
+      } 
+    }; 
+    // Set default end date to tomorrow 
+    const tomorrow = new Date(); 
+    tomorrow.setDate(tomorrow.getDate() + 1); 
+    document.getElementById('endDate').value = tomorrow.toISOString().split('T')[0]; 
+  </script> 
+</body> 
+</html> 
